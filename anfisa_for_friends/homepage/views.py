@@ -5,19 +5,13 @@ from django.db.models import Q
 
 def index(request):
     template_name = 'homepage/index.html'
-    ice_cream_list = IceCream.objects.select_related('category').filter(
+    ice_cream_list = IceCream.objects.values(
+        'id', 'title', 'price', 'description'
+    ).filter(
+        is_published=True,
+        is_on_main=True,
         category__is_published=True
     )
-    # ice_cream_list = IceCream.objects.values('id', 'title', 'category__title')
-    # ice_cream_list = IceCream.objects.values(
-    #     'id', 'title', 'description'
-    # ).filter(
-    #     Q(is_published=True) & Q(is_on_main=True)
-    #     | (
-    #         Q(is_published=True)
-    #         & Q(title__contains='пломбир')
-    #     )
-    # ).order_by('title')[1:4]
     context = {
         'ice_cream_list': ice_cream_list,
     }
